@@ -27,4 +27,9 @@ export class UserController {
         return this.UserService.createUser(CreateUserDto) ; 
     }
 
+    @Post("/update/:userId")
+    updateUser(@Param() params: {userId: number} ,  @Body() CreateUserDto: CreateUserDto ){
+        return this.UserService.updateUser( params.userId , CreateUserDto ); 
+    }
+
 }

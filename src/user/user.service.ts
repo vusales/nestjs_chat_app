@@ -30,5 +30,17 @@ export class UserService {
         return result ;
     }
 
+    async updateUser(id: number , CreateUserDto: CreateUserDto   ): Promise<User> {
+        const user = await this.usersRepository.findOneBy({id});
+        if (!user) {
+            throw new Error(`User with id ${id} not found`);
+        }
+        this.usersRepository.merge(user, CreateUserDto);
+        return await this.usersRepository.save(user);
+    }
 
+    findByEmail( email:  string  ): Promise<User> {
+        let user =  this.usersRepository.findOne({where: {email}}) ; 
+        return user ; 
+    }
 }
