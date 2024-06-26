@@ -10,6 +10,9 @@ export class User {
     name:  string ; 
 
     @Column()
+    lastName:  string ; 
+
+    @Column()
     email: string ; 
 
     @Column()
@@ -17,5 +20,5 @@ export class User {
 
     @Column() 
     password: string ; 
-    
+
 }

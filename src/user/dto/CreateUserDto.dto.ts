@@ -6,15 +6,21 @@ import {
 } from "class-validator";
 
 export class CreateUserDto {
-    @IsString() 
+ 
+    @IsString()
     name: string ; 
 
+    @IsString()
+    lastName: string ;
+
     @IsEmail()
-    email: string ; 
+    email: string; 
 
-    @IsNotEmpty()
-    phone: string ; 
+    @IsString()
+    phone: string; 
 
+    
     @IsString() 
     password: string ; 
+
 }

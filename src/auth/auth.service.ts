@@ -5,6 +5,8 @@ import { JwtService } from '@nestjs/jwt';
 import { CreateUserDto } from 'src/user/dto/CreateUserDto.dto';
 
 
+
+
 @Injectable()
 export class AuthService {
 
@@ -14,7 +16,7 @@ export class AuthService {
     ){}
 
 
-    async validateUser ( body:LoginDto ):Promise<{ result: boolean; data: CreateUserDto | null ; message: string; token: string ;}>  {
+    async login ( body:LoginDto ):Promise<{ result: boolean; data: CreateUserDto | null ; message: string; token: string ;}>  {
 
         let user = await this.userService.findByEmail(body.email);
         if(user) {
@@ -23,7 +25,10 @@ export class AuthService {
                 const access_token = await this.jwtService.signAsync(payload) ; 
                 return {
                     result:  true , 
-                    data: user , 
+                    data: {
+                        lastName: "" , 
+                        ...user
+                    } , 
                     message: "You are loged in!" , 
                     token: access_token , 
                 }
@@ -45,7 +50,31 @@ export class AuthService {
     }
 
 
+    async signIn(body:CreateUserDto ):Promise<{ result: boolean; data: CreateUserDto | null ; message: string; token: string ;}> {
+      
+        let user = await this.userService.findByEmail(body.email);
 
+        if(!user){
+            let newUser =  await this.userService.createUser(body) ; 
+            const payload = { sub: newUser.id, username: newUser.name };
+            const access_token = await this.jwtService.signAsync(payload) ;
+
+            return {
+                result:  true , 
+                data: newUser , 
+                message: "User registered, well done!" , 
+                token: access_token , 
+            }
+        }
+
+
+        return {
+            result: false , 
+            data:  null , 
+            message: "This email registered before!", 
+            token: "" ,
+        };
+    }
 
 
 }
