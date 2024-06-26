@@ -14,7 +14,7 @@ export class AuthService {
     ){}
 
 
-    async login ( body:LoginDto ):Promise<{ result: boolean; data: CreateUserDto | null ; message: string; token: string ;}>  {
+    async validateUser ( body:LoginDto ):Promise<{ result: boolean; data: CreateUserDto | null ; message: string; token: string ;}>  {
 
         let user = await this.userService.findByEmail(body.email);
         if(user) {

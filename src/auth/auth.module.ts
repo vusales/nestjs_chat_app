@@ -4,6 +4,7 @@ import { AuthController } from './auth.controller';
 import { UserModule } from 'src/user/user.module';
 import { JwtModule } from '@nestjs/jwt';
 import { jwtConstants } from './contants';
+import { PassportModule } from '@nestjs/passport';
 // import { AuthGuard } from './auth.guard';
 // import { APP_GUARD } from '@nestjs/core';
 
@@ -11,6 +12,7 @@ import { jwtConstants } from './contants';
 @Module({
   providers: [
     AuthService,
+    // for making jwt controlling global in all auth 
     // {
     //   provide: APP_GUARD,
     //   useClass: AuthGuard,
@@ -18,12 +20,14 @@ import { jwtConstants } from './contants';
   ],
   controllers : [AuthController] , 
   imports: [
-    UserModule , 
+    UserModule ,
+    PassportModule ,  
     JwtModule.register({
       global: true,
       secret: jwtConstants.secret,
       signOptions: { expiresIn: '60s' },
     }),
   ] , 
+
 })
 export class AuthModule {}

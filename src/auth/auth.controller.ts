@@ -22,7 +22,7 @@ export class AuthController {
     @HttpCode(HttpStatus.OK)
     @Post("/login")
     async login( @Body()  body: LoginDto ) {
-        return this.authService.login(body); 
+        return this.authService.validateUser(body); 
     }
 
     @UseGuards(AuthGuard)
