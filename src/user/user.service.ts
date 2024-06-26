@@ -15,36 +15,19 @@ export class UserService {
     ) {}
 
     getUsers(): Promise<User[]> {
-
-        let data:any =  [
-            {
-                name: "user1" , 
-                email: "user1@email.com"
-            } , 
-            {
-                name: "user2" ,
-                email: "user2@email.com"
-            } , 
-
-        ] ;
-
+        let data = this.usersRepository.find() ; 
         return  data ; 
     }
 
-    getUser( userId: number ) {
-
-        return userId ;
+    getUser( id: number ):  Promise< User|null > {
+        let data = this.usersRepository.findOneBy({ id }) ; 
+        return data ;
     }
 
-    createUser( CreateUserDto: CreateUserDto ) {
-
-        console.log("it is created body" , CreateUserDto ) ; 
-
-        return {
-            result: true , 
-            message: "User created successfully!"
-        }
-
+    async createUser( CreateUserDto: CreateUserDto ): Promise<User>{
+        const user = this.usersRepository.create(CreateUserDto);
+        const result = await this.usersRepository.save(user); 
+        return result ;
     }
 
 
