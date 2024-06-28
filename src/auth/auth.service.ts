@@ -5,16 +5,12 @@ import { JwtService } from '@nestjs/jwt';
 import { CreateUserDto } from 'src/user/dto/CreateUserDto.dto';
 
 
-
-
 @Injectable()
 export class AuthService {
-
     constructor(
         private userService: UserService , 
         private jwtService: JwtService ,
     ){}
-
 
     async login ( body:LoginDto ):Promise<{ result: boolean; data: CreateUserDto | null ; message: string; token: string ;}>  {
 
@@ -49,7 +45,6 @@ export class AuthService {
 
     }
 
-
     async signIn(body:CreateUserDto ):Promise<{ result: boolean; data: CreateUserDto | null ; message: string; token: string ;}> {
       
         let user = await this.userService.findByEmail(body.email);
@@ -67,7 +62,6 @@ export class AuthService {
             }
         }
 
-
         return {
             result: false , 
             data:  null , 
@@ -75,6 +69,5 @@ export class AuthService {
             token: "" ,
         };
     }
-
 
 }
