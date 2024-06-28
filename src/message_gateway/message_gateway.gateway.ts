@@ -1,5 +1,3 @@
- 
-
 import {
   MessageBody,
   SubscribeMessage,
@@ -59,6 +57,7 @@ export class MessageGateway implements OnGatewayConnection, OnGatewayDisconnect 
     } 
   }
 
+
   async handleConnection(client: Socket): Promise<void> {
     await this.getAllUsers() ; 
     await this.getAllMessages(); 
@@ -67,10 +66,19 @@ export class MessageGateway implements OnGatewayConnection, OnGatewayDisconnect 
     console.log('this.messages'  , this.messages ) ; 
     const userId = client.handshake.query.id as string;
     if (userId) {
+      // this.users.set(userId, client);
+      // // Send any stored messages to the user
+      // const userMessages = this.messages.get(userId) || [];
+      // userMessages.forEach(message => client.emit('message', message));
+      // this.messages.delete(userId);
     }
   }
 
   handleDisconnect(client: Socket) {
+    // const userId = Array.from(this.users.entries()).find(([_, socket]) => socket === client)?.[0];
+    // if (userId) {
+    //   this.users.delete(userId);
+    // }
   }
 
   @SubscribeMessage('message')
@@ -80,13 +88,16 @@ export class MessageGateway implements OnGatewayConnection, OnGatewayDisconnect 
   ): boolean {
     const { userId, message } = data;
     console.log("Sending message to", userId);
+    // if (this.users.has(userId)) {
+    //   this.users.get(userId).emit('message', message);
+    // } else {
+    //   if (!this.messages.has(userId)) {
+    //     this.messages.set(userId, []);
+    //   }
+    //   this.messages.get(userId).push(message);
+    // }
     return true;
   }
 
 
 }
-  
-
-
-
-
