@@ -10,6 +10,9 @@ import {
 import { Server, Socket } from 'socket.io';
 import { UserService } from 'src/user/user.service';
 import { MessageGatewayService } from './message_gateway.service';
+import { JwtService } from '@nestjs/jwt';
+import { UnauthorizedException } from '@nestjs/common';
+import { jwtConstants } from 'src/auth/contants';
 
 @WebSocketGateway({
   cors: {
@@ -24,6 +27,7 @@ export class MessageGateway implements OnGatewayConnection, OnGatewayDisconnect 
   constructor(
     private userService: UserService , 
     private messageService: MessageGatewayService , 
+    private jwtService: JwtService , 
   ) {}
 
   private users:any;  
@@ -33,7 +37,7 @@ export class MessageGateway implements OnGatewayConnection, OnGatewayDisconnect 
   async getAllUsers():Promise<void>{
     try{
       let users = await this.userService.getUsers() ; 
-      console.log(users);
+      // console.log(users);
       if(!users) {
         this.users = [] ;
       }else {
@@ -47,7 +51,7 @@ export class MessageGateway implements OnGatewayConnection, OnGatewayDisconnect 
   async getAllMessages():Promise<void>{
     try{
       let messages = await this.messageService.getAllMessages() ; 
-      if(messages){
+      if(messages.length){
         this.messages = messages ; 
       }else {
         this.messages = [] ; 
@@ -59,19 +63,47 @@ export class MessageGateway implements OnGatewayConnection, OnGatewayDisconnect 
 
 
   async handleConnection(client: Socket): Promise<void> {
-    await this.getAllUsers() ; 
-    await this.getAllMessages(); 
+    try {
 
-    console.log('this.user'  , this.users ) ; 
-    console.log('this.messages'  , this.messages ) ; 
-    const userId = client.handshake.query.id as string;
-    if (userId) {
-      // this.users.set(userId, client);
-      // // Send any stored messages to the user
-      // const userMessages = this.messages.get(userId) || [];
-      // userMessages.forEach(message => client.emit('message', message));
-      // this.messages.delete(userId);
+      await this.getAllUsers() ; 
+      // await this.getAllMessages(); 
+
+      let senderJwtToken =  client.handshake.headers.user_token as string ;
+      console.log( "senderJwtToken" ,  senderJwtToken ) ; 
+
+      if (!senderJwtToken) {
+        throw new UnauthorizedException('Token not provided');
+      }
+      let jwt_payload =  await this.jwtService.verifyAsync(
+        senderJwtToken , 
+        {
+          secret: jwtConstants.secret
+        }
+      ); 
+
+      let senderID = jwt_payload.sub ; 
+
+      console.log( "jwt_payload" ,  jwt_payload ) ; 
+
+      // console.log('this.user'  , this.users ) ; 
+      // console.log('client'  , client.handshake ); 
+      // console.log('this.messages'  , this.messages ) ; 
+      const userId = client.handshake.query.id as string;
+      if (userId) {
+        // this.users.set(userId, client);
+        // // Send any stored messages to the user
+        // const userMessages = this.messages.get(userId) || [];
+        // userMessages.forEach(message => client.emit('message', message));
+        // this.messages.delete(userId);
+      }
+      
+    } catch (error) {
+
+      console.log("error while connection" , error ); 
+      client.disconnect();
+      
     }
+
   }
 
   handleDisconnect(client: Socket) {

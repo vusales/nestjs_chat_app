@@ -27,7 +27,7 @@ export class Message {
 
     @CreateDateColumn({ 
         type: 'timestamp', 
-        default: () => 'CURRENT_TIMESTAMP'
+        // default: () => 'CURRENT_TIMESTAMP'
     })
     read_time: Date ; 
 }

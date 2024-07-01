@@ -21,7 +21,6 @@ export class User {
     @Column() 
     password: string ; 
 
-
     @Column({
         nullable:  true , 
         type: 'simple-array',
