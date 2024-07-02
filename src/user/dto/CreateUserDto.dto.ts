@@ -2,7 +2,8 @@
 import { 
     IsString, 
     IsEmail, 
-    IsNotEmpty, 
+    IsNotEmpty,
+    IsArray, 
 } from "class-validator";
 
 export class CreateUserDto {
@@ -22,5 +23,8 @@ export class CreateUserDto {
     
     @IsString() 
     password: string ; 
+
+    // @IsArray()
+    // connectedUsers: number[] ;
 
 }

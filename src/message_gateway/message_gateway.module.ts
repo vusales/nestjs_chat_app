@@ -2,7 +2,7 @@ import { Module } from '@nestjs/common';
 import { MessageGateway } from './message_gateway.gateway';
 import { UserModule } from 'src/user/user.module';
 import { MessageGatewayService } from './message_gateway.service';
-import { Message } from './entity/message.entity';
+import { Message } from './entity/Message.entity';
 import { TypeOrmModule } from '@nestjs/typeorm';
 
 
@@ -11,6 +11,6 @@ import { TypeOrmModule } from '@nestjs/typeorm';
     imports: [
         TypeOrmModule.forFeature([Message]) , 
         UserModule 
-    ] , 
+    ], 
 })
 export class MessageGatewayModule {}

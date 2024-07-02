@@ -1,4 +1,9 @@
-import { Column, CreateDateColumn, Entity, PrimaryGeneratedColumn } from "typeorm";
+import { 
+    Column, 
+    CreateDateColumn, 
+    Entity, 
+    PrimaryGeneratedColumn 
+} from "typeorm";
 
 
 @Entity() 
@@ -20,7 +25,7 @@ export class Message {
 
     @CreateDateColumn({ 
         type: 'timestamp', 
-        default: () => 'CURRENT_TIMESTAMP'
+        // default: () => 'CURRENT_TIMESTAMP'
     })
     sent_time: Date ; 
 

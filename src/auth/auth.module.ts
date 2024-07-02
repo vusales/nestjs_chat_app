@@ -12,7 +12,7 @@ import { PassportModule } from '@nestjs/passport';
 @Module({
   providers: [
     AuthService,
-    // for making jwt controlling global in all auth 
+    // for making jwt controlling global in all app routes
     // {
     //   provide: APP_GUARD,
     //   useClass: AuthGuard,
@@ -25,7 +25,7 @@ import { PassportModule } from '@nestjs/passport';
     JwtModule.register({
       global: true,
       secret: jwtConstants.secret,
-      signOptions: { expiresIn: '60s' },
+      signOptions: { expiresIn: '1d' },
     }),
   ] , 
 

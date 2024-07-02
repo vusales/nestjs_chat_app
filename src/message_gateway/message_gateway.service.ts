@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Message } from './entity/message.entity';
+import { Message } from './entity/Message.entity';
 import { Repository } from 'typeorm';
 
 
@@ -15,8 +15,10 @@ export class MessageGatewayService {
     async getAllMessages():Promise<Message[]> {
         try {
             let messages =  await  this.messageRepository.find() ; 
-            return messages ;
-            
+            if(messages&&messages.length) {
+                return messages ;   
+            }
+            return [] ; 
         } catch (error) {
             console.log("error in getting all messages"  , error );
         }
@@ -25,23 +27,15 @@ export class MessageGatewayService {
 
     async createMessage(senderId:number  , receiverId: number , messageText: string ):Promise<Message> {
         try {
-
-            let message =  await this.messageRepository.create({
+            let message =  this.messageRepository.create({
                 sender_id : senderId , 
                 receiver_id:  receiverId , 
                 message_text: messageText , 
             }); 
-
-
-            console.log("message" , message ); 
-
-            return message ;  
-
-
-            
+            const result = await this.messageRepository.save(message); 
+            return result ;  
         } catch (error) {
             console.log("error while creating message in DB" ,  error ); 
-            
         }
     }
 }

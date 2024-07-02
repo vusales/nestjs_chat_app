@@ -4,8 +4,8 @@ import { AppService } from './app.service';
 import { UserModule } from './user/user.module';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { User } from './user/entity/user.entity';
+import { Message } from './message_gateway/entity/Message.entity';
 import { AuthModule } from './auth/auth.module';
-import { UserGateway } from './user_gateway/user_gateway.gateway';
 import { MessageGatewayModule } from './message_gateway/message_gateway.module';
 
 
@@ -18,7 +18,7 @@ import { MessageGatewayModule } from './message_gateway/message_gateway.module';
       username: 'root',
       password: '123456Vs',
       database: 'chatapp',
-      entities: [User],
+      entities: [User,  Message],
       synchronize: true,
     }),
     UserModule , 
@@ -26,7 +26,7 @@ import { MessageGatewayModule } from './message_gateway/message_gateway.module';
     MessageGatewayModule,
   ],
   controllers: [AppController],
-  providers: [AppService , UserGateway],
+  providers: [AppService , ],
 })
 
 export class AppModule {}
