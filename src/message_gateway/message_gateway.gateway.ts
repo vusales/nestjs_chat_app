@@ -36,7 +36,7 @@ export class MessageGateway implements OnGatewayConnection, OnGatewayDisconnect 
   async getAllUsers(): Promise<void> {
     try {
       const users = await this.userService.getUsers();
-      this.users = new Map(users.map(user => [user.id , user] )); 
+      this.users = new Map(users.map(user => [user.userId , user] )); 
     } catch (err) {
       console.error('Error getting users:', err);
     }
@@ -155,6 +155,7 @@ export class MessageGateway implements OnGatewayConnection, OnGatewayDisconnect 
     } catch (error) {
       console.log("error while sending message, message:event"  , error ); 
     }
+    
   }
 
 

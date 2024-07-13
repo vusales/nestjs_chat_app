@@ -38,4 +38,7 @@ export class MessageGatewayService {
             console.log("error while creating message in DB" ,  error ); 
         }
     }
+
+
+    
 }

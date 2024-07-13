@@ -19,8 +19,8 @@ export class UserService {
         return  data ; 
     }
 
-    getUser( id: number ):  Promise< User|null > {
-        let data = this.usersRepository.findOneBy({ id }) ; 
+    getUser( userId: number ):  Promise< User|null > {
+        let data = this.usersRepository.findOneBy({ userId }) ; 
         return data ;
     }
 
@@ -30,10 +30,10 @@ export class UserService {
         return result ;
     }
 
-    async updateUser(id: number , CreateUserDto: CreateUserDto   ): Promise<User> {
-        const user = await this.usersRepository.findOneBy({id});
+    async updateUser(userId: number , CreateUserDto: CreateUserDto   ): Promise<User> {
+        const user = await this.usersRepository.findOneBy({userId});
         if (!user) {
-            throw new Error(`User with id ${id} not found`);
+            throw new Error(`User with userId ${userId} not found`);
         }
         this.usersRepository.merge(user, CreateUserDto);
         return await this.usersRepository.save(user);

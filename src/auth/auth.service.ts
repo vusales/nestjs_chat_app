@@ -18,7 +18,7 @@ export class AuthService {
         let user = await this.userService.findByEmail(body.email);
         if(user) {
             if(user.password === body.password ) {
-                const payload = { sub: user.id, username: user.name };
+                const payload = { sub: user.userId, username: user.name };
                 const access_token = await this.jwtService.signAsync(payload) ; 
                 console.log("access_token" , access_token ); 
                 return {
@@ -53,7 +53,7 @@ export class AuthService {
 
         if(!user){
             let newUser =  await this.userService.createUser(body) ; 
-            const payload = { sub: newUser.id, username: newUser.name };
+            const payload = { sub: newUser.userId, username: newUser.name };
             const access_token = await this.jwtService.signAsync(payload) ;
 
             return {
