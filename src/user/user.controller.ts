@@ -4,6 +4,8 @@ import {
     Param ,
     Post, 
     Body , 
+    Headers, 
+    Query, 
 } from '@nestjs/common';
 import { UserService } from './user.service';
 import { CreateUserDto } from './dto/CreateUserDto.dto';
@@ -30,6 +32,28 @@ export class UserController {
     @Post("/update/:userId")
     updateUser(@Param() params: {userId: number} ,  @Body() CreateUserDto: CreateUserDto ){
         return this.UserService.updateUser( params.userId , CreateUserDto ); 
+    }
+
+
+    @Get("/messages/:userId")
+    async getUserMessages(
+        @Param() params : { userId : number } , 
+    ){
+        // if(!params.userId){
+        //     return; 
+        // }
+
+        const convertedUserId = +params.userId ;
+
+        
+        let data =  await this.UserService.getMessagesByUserId(convertedUserId); 
+
+
+        return {
+            params ,
+
+            // data , 
+        } ;  
     }
 
 }

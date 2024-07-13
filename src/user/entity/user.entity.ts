@@ -1,10 +1,17 @@
-import { Column, Entity, PrimaryGeneratedColumn } from "typeorm";
+import { 
+    Column, 
+    Entity,  
+    OneToMany,  
+    PrimaryGeneratedColumn 
+} from "typeorm";
+
+import { UsersToMessage } from "./usersToMessage.entity";
 
 @Entity() 
 export class User {
 
     @PrimaryGeneratedColumn() 
-    userId: number ; 
+    user_id: number ; 
 
     @Column()
     name:  string ; 
@@ -25,6 +32,11 @@ export class User {
         nullable:  true , 
         type: 'simple-array',
     })
+    
     connectedUsers!: number[]  ; 
+
+
+    @OneToMany(() => UsersToMessage, usersToMessage => usersToMessage.user)
+    usersToMessage: UsersToMessage ; 
 
 }

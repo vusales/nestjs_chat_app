@@ -5,6 +5,8 @@ import { CreateUserDto } from './dto/CreateUserDto.dto';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { User } from './entity/user.entity';
+import { UsersToMessage } from './entity/usersToMessage.entity';
+import { Message } from 'src/message_gateway/entity/Message.entity';
 
 @Injectable()
 export class UserService {
@@ -12,15 +14,21 @@ export class UserService {
     constructor(
         @InjectRepository(User)
         private usersRepository: Repository<User>,
+        
+        @InjectRepository(UsersToMessage)  
+        private usersToMessageRepository: Repository<UsersToMessage>,
+        
+        @InjectRepository(Message)  
+        private messageRepository: Repository<Message>,
     ) {}
 
-    getUsers(): Promise<User[]> {
-        let data = this.usersRepository.find() ; 
+    async getUsers(): Promise<User[]> {
+        let data = await this.usersRepository.find() ; 
         return  data ; 
     }
 
-    getUser( userId: number ):  Promise< User|null > {
-        let data = this.usersRepository.findOneBy({ userId }) ; 
+    async getUser( user_id: number ):  Promise< User|null > {
+        let data = await this.usersRepository.findOneBy({ user_id }) ; 
         return data ;
     }
 
@@ -30,17 +38,34 @@ export class UserService {
         return result ;
     }
 
-    async updateUser(userId: number , CreateUserDto: CreateUserDto   ): Promise<User> {
-        const user = await this.usersRepository.findOneBy({userId});
+    async updateUser(user_id: number , CreateUserDto: CreateUserDto   ): Promise<User> {
+        const user = await this.usersRepository.findOneBy({user_id});
         if (!user) {
-            throw new Error(`User with userId ${userId} not found`);
+            throw new Error(`User with user_id ${user_id} not found`);
         }
         this.usersRepository.merge(user, CreateUserDto);
         return await this.usersRepository.save(user);
     }
 
-    findByEmail( email:  string  ): Promise<User> {
-        let user =  this.usersRepository.findOne({where: {email}}) ; 
+    async findByEmail( email:  string  ): Promise<User> {
+        let user = await this.usersRepository.findOne({where: {email}}) ; 
         return user ; 
     }
+
+
+    async getMessagesByUserId(user_id:number): Promise<UsersToMessage[]> {
+        let result =  await this.usersToMessageRepository.find({
+            where :{
+                user: {
+                    user_id , 
+                }, 
+            } , 
+            relations:{
+               user:  true , 
+               message:  true , 
+            }
+        }); 
+        return result ; 
+    }
+
 }

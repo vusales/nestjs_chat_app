@@ -5,6 +5,7 @@ import { UserModule } from './user/user.module';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { User } from './user/entity/user.entity';
 import { Message } from './message_gateway/entity/Message.entity';
+import { UsersToMessage } from './user/entity/usersToMessage.entity';
 import { AuthModule } from './auth/auth.module';
 import { MessageGatewayModule } from './message_gateway/message_gateway.module';
 
@@ -18,7 +19,11 @@ import { MessageGatewayModule } from './message_gateway/message_gateway.module';
       username: 'root',
       password: '123456Vs',
       database: 'chatapp',
-      entities: [User,  Message],
+      entities: [
+        User,  
+        Message , 
+        UsersToMessage ,
+      ],
       synchronize: true,
     }),
     UserModule , 
